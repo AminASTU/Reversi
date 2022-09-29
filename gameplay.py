@@ -15,11 +15,13 @@ def Move():
     print('Твой ход: ')
     xy = input()
     coordinate = CoordinateRules(xy)
+
+    # Получение готовых координат
+    x_str = ''
+    y_numb = int()
     if(coordinate != 0):
         x_str = coordinate[0]
         y_numb = int(coordinate[1])
-        print(type(y_numb))
-        print(type(x_str))
 
 # Проверка на вторую координату (буква)
 def CheckWordInCoord(check):
