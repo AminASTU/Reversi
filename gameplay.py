@@ -43,11 +43,20 @@ def Move():
         if(coordinate != 0):
             x_coord = int(coordinate[1])
             y_coord = int(coordinate[0])
-
-        if (step % 2 == 0):
-            FillBoard_White(x_coord, y_coord)
+        # Если произошло наложение на фишку, то повторить ход
+        if(isOverlay(x_coord, y_coord)):
+            step = counter()
         else:
-            FillBoard_Black(x_coord, y_coord)
+            if (step % 2 == 0):
+                if(isRowClosure(x_coord, y_coord, 'B')):
+                    FillBoard_White(x_coord, y_coord)
+                else:
+                    step = counter()
+            else:
+                if(isRowClosure(x_coord, y_coord, 'W')):
+                    FillBoard_Black(x_coord, y_coord)
+                else:
+                    step = counter()
     
 # Проверка на вторую координату (буква)
 def CheckWordInCoord(check):
@@ -116,6 +125,70 @@ def FillBoard_White(x_coord, y_coord):
 def FillBoard_Black(x_coord, y_coord):
     board[x_coord - 1][y_coord - 1] = 'B'
 
+# Функция для проверки хода (наложение на другую фишку)
+def isOverlay(x_coord, y_coord):
+    if(board[x_coord - 1][y_coord - 1] == 'W' or board[x_coord - 1][y_coord - 1] == 'B'):
+        print('Ошибочный ход. Наложение на фишку')
+        return True
+    return False
+
+# Функция для проверки хода (рядом с фишкой соперника + замыкание ряда)
+def isRowClosure(x_coord, y_coord, enemy):
+    if(y_coord-1 == 0 or y_coord-1 == 1):
+        if (x_coord-1 == 0 or x_coord-1 == 1):
+            if (board[x_coord - 1][y_coord] == enemy or board[x_coord][y_coord - 1] == enemy or 
+                board[x_coord][y_coord] == enemy):
+                # Проверка на замыкание
+                return True
+        elif (x_coord-1 == 7 or x_coord-1 == 6):
+            if (board[x_coord - 2][y_coord - 1] == enemy or board[x_coord - 2][y_coord] == enemy or 
+                board[x_coord - 1][y_coord] == enemy):
+                # Проверка на замыкание
+                return True
+        else:
+            if (board[x_coord - 2][y_coord - 1] == enemy or board[x_coord - 2][y_coord] == enemy or 
+                board[x_coord - 1][y_coord] == enemy or board[x_coord][y_coord] == enemy or 
+                board[x_coord][y_coord - 1] == enemy):
+                # Проверка на замыкание
+                return True
+    elif (y_coord-1 == 7 or y_coord-1 == 6):
+        if (x_coord-1 == 0 or x_coord-1 == 1):
+            if (board[x_coord - 1][y_coord - 2] == enemy or board[x_coord][y_coord - 2] == enemy or 
+                board[x_coord][y_coord - 1] == enemy):
+                # Проверка на замыкание
+                return True
+        elif (x_coord-1 == 7 or x_coord-1 == 6):
+            if (board[x_coord - 1][y_coord - 2] == enemy or board[x_coord - 2][y_coord - 2] == enemy or 
+                board[x_coord - 2][y_coord - 1] == enemy):
+                # Проверка на замыкание
+                return True
+        else:
+            if (board[x_coord - 2][y_coord - 1] == enemy or board[x_coord - 2][y_coord - 2] == enemy or 
+                board[x_coord - 1][y_coord - 2] == enemy or board[x_coord][y_coord - 2] == enemy or 
+                board[x_coord][y_coord - 1] == enemy):
+                # Проверка на замыкание
+                return True
+    elif (y_coord-1 > 1 and y_coord-1 < 6):
+        if (x_coord-1 == 0 or x_coord-1 == 1):
+            if (board[x_coord - 1][y_coord - 2] == enemy or board[x_coord][y_coord - 2] == enemy or 
+                board[x_coord][y_coord - 1] == enemy or board[x_coord][y_coord] == enemy or 
+                board[x_coord - 1][y_coord] == enemy):
+                # Проверка на замыкание
+                return True
+        elif (x_coord-1 == 7 or x_coord-1 == 6):
+            if (board[x_coord - 2][y_coord - 1] == enemy or board[x_coord - 2][y_coord - 2] == enemy or 
+                board[x_coord - 1][y_coord - 2] == enemy or board[x_coord - 2][y_coord] == enemy or 
+                board[x_coord - 1][y_coord] == enemy):
+                # Проверка на замыкание
+                return True
+        else:
+            if(board[x_coord - 2][y_coord - 2] == enemy or board[x_coord - 1][y_coord - 2] == enemy or
+                board[x_coord - 2][y_coord - 1] == enemy or board[x_coord][y_coord - 1] == enemy or
+                board[x_coord - 1][y_coord] == enemy or board[x_coord][y_coord] == enemy or
+                board[x_coord][y_coord - 2] == enemy or board[x_coord - 2][y_coord] == enemy):
+                # Проверка на замыкание
+                return True
+    return False
 # Основная функция партии
 def GamePlay():
     f_exit = False
