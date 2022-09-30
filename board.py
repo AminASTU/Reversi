@@ -31,18 +31,19 @@ def PrintBoard(board):
     for i in range(0, 10):
         for j in range(10):
             if(i < 8 and j < 8):
-                print(board[i][j], end='')
+                print(board[i][j], end='  ')
             else:
                 if (i == 8):
-                    print(arrayLineH[h], end='')
+                    print(arrayLineH[h], end='  ')
                     h+=1
                 if (j == 8):
-                    print(arrayLineV[v], end='')
+                    print(arrayLineV[v], end='  ')
                     v+=1
                 if (i == 9):
-                    print(arrayNumb[z], end='')
+                    print(arrayNumb[z], end='  ')
                     z+=1
                 if (j == 9):
-                    print(arrayWord[q], end='')
+                    print(arrayWord[q], end='  ')
                     q+=1
         print()
+PrintBoard(FillStartBoard())
