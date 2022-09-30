@@ -46,4 +46,3 @@ def PrintBoard(board):
                     print(arrayWord[q], end='  ')
                     q+=1
         print()
-PrintBoard(FillStartBoard())
