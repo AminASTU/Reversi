@@ -1,5 +1,4 @@
-from gameplay import HodAI, isGameOver, isOverlay, isRowClosure, create_counter, GetBoard
-from tkinter import DISABLED
+from gameplay import FillBoard_White, HodAI, isGameOver, isOverlay, isRowClosure, create_counter, GetBoard
 
 counterAI = create_counter()
 
@@ -37,17 +36,3 @@ def getScores(tmp):
             elif (tmp[i][j] == 'W'):
                 countW+=1
     return {'White': countW, 'Black': countB}
-
-def MoveAI():
-    board = GetBoard()
-    bestScore = -10000
-    dict = {}
-    for i in range(1, 9):
-        for j in range(1, 9):
-            if (isOverlay(i, j) == False):
-                if(isRowClosure(i, j, 'B', 'W', board, 't') == True):
-                    newScore = SearchMoves(0, i, j, board) 
-                    if (newScore > bestScore):
-                        bestScore = newScore
-                        dict = {'x': i, 'y': j}
-    HodAI(dict['x'], dict['y'])
