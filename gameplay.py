@@ -227,10 +227,10 @@ def OnDown(x_coord, y_coord, enemy, you, _board):
 def OnUpLeft(x_coord, y_coord, enemy, you, _board):
     if(_board[x_coord - 2][y_coord - 2] == enemy):
         newCoordinates = []
-        steps = x_coord
+        steps = 8
         for i in range(0, steps - 1):
             newCoordinates.append(str(x_coord - (2 + i)) + str(y_coord  - (2 + i)))
-            if (_board[x_coord - (2 + i)][y_coord - (2 + i)] != you) and (_board[x_coord - (2 + i)][y_coord  - (2 + i)] != enemy):
+            if (x_coord - (2 + i) < 0) or (y_coord - (2 + i) < 0) or ((_board[x_coord - (2 + i)][y_coord - (2 + i)] != you) and (_board[x_coord - (2 + i)][y_coord  - (2 + i)] != enemy)):
                 return -1
             elif (_board[x_coord - (2 + i)][y_coord  - (2 + i)] == you):
                 return newCoordinates          
@@ -239,10 +239,10 @@ def OnUpLeft(x_coord, y_coord, enemy, you, _board):
 def OnUpRight(x_coord, y_coord, enemy, you, _board):
     if(_board[x_coord - 2][y_coord] == enemy):
         newCoordinates = []
-        steps = 8 - y_coord
+        steps = 8
         for i in range(0, steps):
             newCoordinates.append(str(x_coord - (2 + i)) + str(y_coord + i))
-            if (_board[x_coord - (2 + i)][y_coord + i] != you) and (_board[x_coord - (2 + i)][y_coord + i] != enemy):
+            if (x_coord - (2 + i) < 0) or (y_coord + i > 7) or ((_board[x_coord - (2 + i)][y_coord + i] != you) and (_board[x_coord - (2 + i)][y_coord + i] != enemy)):
                 return -1
             elif (_board[x_coord - (2 + i)][y_coord + i] == you):
                 return newCoordinates          
@@ -251,30 +251,30 @@ def OnUpRight(x_coord, y_coord, enemy, you, _board):
 def OnDownLeft(x_coord, y_coord, enemy, you, _board):
     if(_board[x_coord][y_coord - 2] == enemy):
         newCoordinates = []
-        steps = 8 - x_coord
+        steps = 8
         for i in range(0, steps):
             newCoordinates.append(str(x_coord + i) + str(y_coord - (2 + i)))
-            if (_board[x_coord + i][y_coord - (2 + i)] != you) and (_board[x_coord + i][y_coord - (2 + i)] != enemy):
+            if (x_coord + i > 7) or (y_coord - (2 + i) < 0) or ((_board[x_coord + i][y_coord - (2 + i)] != you) and (_board[x_coord + i][y_coord - (2 + i)] != enemy)):
                 return -1
             elif (_board[x_coord + i][y_coord - (2 + i)] == you):
                 return newCoordinates          
     return -1
 
 def OnDownRight(x_coord, y_coord, enemy, you, _board):
+    
     if(_board[x_coord][y_coord] == enemy):
         newCoordinates = []
-        steps = 8 - y_coord
+        steps = 8
         for i in range(0, steps):
             newCoordinates.append(str(x_coord + i) + str(y_coord + i))
-            print('x: ', x_coord + i, 'y: ', y_coord + i)
-            if (_board[x_coord + i][y_coord + i] != you) and (_board[x_coord + i][y_coord + i] != enemy):
+            if (x_coord + i > 7) or (y_coord + i > 7) or ((_board[x_coord + i][y_coord + i] != you) and (_board[x_coord + i][y_coord + i] != enemy)):
                 return -1
             elif (_board[x_coord + i][y_coord + i] == you):
                 return newCoordinates          
     return -1
-def Reverse(array, you):
+def Reverse(array, you, _board):
     for i in range(0, len(array)):
-        board[int(array[i][0])][int(array[i][1])] = you
+        _board[int(array[i][0])][int(array[i][1])] = you
 
 def GetBoard():
     return board
@@ -291,15 +291,15 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
                 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
                 
                 reverseDownRight = OnDownRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownRight != -1 and f_check == 'f'):
-                    Reverse(reverseDownRight, you)
+                    Reverse(reverseDownRight, you, _board)
                 
                 if (reverseDown != -1 or reverseDownRight != -1 or reverseRight != -1):
                     return True
@@ -311,15 +311,15 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
 
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
                 
                 reverseUpRight = OnUpRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpRight != -1 and f_check == 'f'):
-                    Reverse(reverseUpRight, you)
+                    Reverse(reverseUpRight, you, _board)
                 
                 if (reverseUp != -1 or reverseUpRight != -1 or reverseRight != -1):
                     return True
@@ -332,23 +332,23 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
 
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
                 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
                 
                 reverseDownRight = OnDownRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownRight != -1 and f_check == 'f'):
-                    Reverse(reverseDownRight, you)
+                    Reverse(reverseDownRight, you, _board)
 
                 reverseUpRight = OnUpRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpRight != -1 and f_check == 'f'):
-                    Reverse(reverseUpRight, you)
+                    Reverse(reverseUpRight, you, _board)
                 
                 if (reverseUp != -1 or reverseUpRight != -1 or reverseRight != -1 or reverseDownRight != -1 or reverseDown != -1):
                     return True
@@ -361,15 +361,15 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
                 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
                 
                 reverseDownLeft = OnDownLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownLeft != -1 and f_check == 'f'):
-                    Reverse(reverseDownLeft, you)
+                    Reverse(reverseDownLeft, you, _board)
 
                 if (reverseLeft != -1 or reverseDownLeft != -1 or reverseDown != -1):
                     return True
@@ -381,15 +381,15 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
                 
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
                 
                 reverseUpLeft = OnUpLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpLeft != -1 and f_check == 'f'):
-                    Reverse(reverseUpLeft, you)
+                    Reverse(reverseUpLeft, you, _board)
 
                 if (reverseLeft != -1 or reverseUpLeft != -1 or reverseUp != -1):
                     return True
@@ -402,23 +402,23 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
                 
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
                 
                 reverseDownLeft = OnDownLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownLeft != -1 and f_check == 'f'):
-                    Reverse(reverseDownLeft, you)
+                    Reverse(reverseDownLeft, you, _board)
 
                 reverseUpLeft = OnUpLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpLeft != -1 and f_check == 'f'):
-                    Reverse(reverseUpLeft, you)
+                    Reverse(reverseUpLeft, you, _board)
                 
                 if (reverseLeft != -1 or reverseUpLeft != -1 or reverseUp != -1 or reverseDown != -1 or reverseDownLeft != -1):
                     return True
@@ -432,23 +432,23 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
                 
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
                 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
                 
                 reverseDownRight = OnDownRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownRight != -1 and f_check == 'f'):
-                    Reverse(reverseDownRight, you)
+                    Reverse(reverseDownRight, you, _board)
                 
                 reverseDownLeft = OnDownLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownLeft != -1 and f_check == 'f'):
-                    Reverse(reverseDownLeft, you)
+                    Reverse(reverseDownLeft, you, _board)
 
                 if (reverseLeft != -1 or reverseRight != -1 or reverseDownRight != -1 or reverseDown != -1 or reverseDownLeft != -1):
                     return True
@@ -461,23 +461,23 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
                 
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
                 
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
                 
                 reverseUpRight = OnUpRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpRight != -1 and f_check == 'f'):
-                    Reverse(reverseUpRight, you)
+                    Reverse(reverseUpRight, you, _board)
 
                 reverseUpLeft = OnUpLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpLeft != -1 and f_check == 'f'):
-                    Reverse(reverseUpLeft, you)
+                    Reverse(reverseUpLeft, you, _board)
 
                 if (reverseLeft != -1 or reverseRight != -1 or reverseUp != -1 or reverseUpRight != -1 or reverseUpLeft != -1):
                     return True
@@ -491,35 +491,35 @@ def isRowClosure(x_coord, y_coord, enemy, you, _board, f_check):
                 # Проверка на замыкание
                 reverseRight = OnRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseRight != -1 and f_check == 'f'):
-                    Reverse(reverseRight, you)
+                    Reverse(reverseRight, you, _board)
 
                 reverseLeft = OnLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseLeft != -1 and f_check == 'f'):
-                    Reverse(reverseLeft, you)
+                    Reverse(reverseLeft, you, _board)
 
                 reverseUp = OnUp(x_coord, y_coord, enemy, you, _board)
                 if(reverseUp != -1 and f_check == 'f'):
-                    Reverse(reverseUp, you)
+                    Reverse(reverseUp, you, _board)
 
                 reverseDown = OnDown(x_coord, y_coord, enemy, you, _board)
                 if(reverseDown != -1 and f_check == 'f'):
-                    Reverse(reverseDown, you)
+                    Reverse(reverseDown, you, _board)
 
                 reverseDownRight = OnDownRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownRight != -1 and f_check == 'f'):
-                    Reverse(reverseDownRight, you)
+                    Reverse(reverseDownRight, you, _board)
 
                 reverseDownLeft = OnDownLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseDownLeft != -1 and f_check == 'f'):
-                    Reverse(reverseDownLeft, you)
+                    Reverse(reverseDownLeft, you, _board)
 
                 reverseUpRight = OnUpRight(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpRight != -1 and f_check == 'f'):
-                    Reverse(reverseUpRight, you)
+                    Reverse(reverseUpRight, you, _board)
                 
                 reverseUpLeft = OnUpLeft(x_coord, y_coord, enemy, you, _board)
                 if(reverseUpLeft != -1 and f_check == 'f'):
-                    Reverse(reverseUpLeft, you)
+                    Reverse(reverseUpLeft, you, _board)
                 
                 if (reverseLeft != -1 or reverseRight != -1 or reverseUp != -1 or reverseUpRight != -1 or reverseUpLeft != -1
                     or reverseDown != -1 or reverseDownRight != -1 or reverseDownLeft != -1):
@@ -540,7 +540,7 @@ def Result():
                 countEm+=1
     if(countW > countB):
         print('Со счетом: ', countW, ' - ', countB, ' победили БЕЛЫЕ фишки. Пустых полей: ', countEm)
-    elif (countW > countB):
+    elif (countW < countB):
         print('Со счетом: ', countB, ' - ', countW, ' победили ЧЕРНЫЕ фишки. Пустых полей: ', countEm)
     else:
         print('Ничья: ', countB, ' - ', countW, '. Пустых полей: ', countEm)
@@ -573,55 +573,32 @@ def WithAI():
     xy = ''
     if (step % 2 == 0):
         print('Ход Белых: ')
-        MoveAI()
-        step = counter()
+        Max()
     else:
         print('Ход Черных: ')
         xy = input()
-    if(xy.lower() == 'exit'):
-        return False
-    else: 
-        coordinate = CoordinateRules(xy.lower())
-        # Получение готовых координат
-        x_coord = int()
-        y_coord = int()
-        if(coordinate != 0):
-            x_coord = int(coordinate[1])
-            y_coord = int(coordinate[0])
-        # Если произошло наложение на фишку, то повторить ход
-        if(isOverlay(x_coord, y_coord, board)):
-            print('Ошибочный ход. Наложение на фишку')
-            step = counter()
-        else:
-            if(isRowClosure(x_coord, y_coord, 'W', 'B', board, 'f')):
-                FillBoard_Black(x_coord, y_coord)
-            else:
+        if(xy.lower() == 'exit'):
+            return False
+        else: 
+            coordinate = CoordinateRules(xy.lower())
+            # Получение готовых координат
+            x_coord = int()
+            y_coord = int()
+            if(coordinate != 0):
+                x_coord = int(coordinate[1])
+                y_coord = int(coordinate[0])
+            # Если произошло наложение на фишку, то повторить ход
+            if(isOverlay(x_coord, y_coord, board)):
+                print('Ошибочный ход. Наложение на фишку')
                 step = counter()
+            else:
+                if(isRowClosure(x_coord, y_coord, 'W', 'B', board, 'f')):
+                    FillBoard_Black(x_coord, y_coord)
+                else:
+                    step = counter()
+
 
 counterAI = create_counter()
-def SearchMoves(deep, x, y, board_copy):
-    step = counterAI() + 1
-    if(step % 2 == 0):
-        board_copy[x-1][y-1] = 'W'
-    else:
-        board_copy[x-1][y-1] = 'B'
-    if(deep < 8 and isGameOver(board_copy) == False):
-        scores = 0
-        for i in range(1, 9):
-            for j in range(1, 9):
-                if (isOverlay(i, j, board_copy) == False):
-                    if(step % 2 == 0):
-                        if(isRowClosure(i, j, 'W', 'B', board_copy, 't') == True):
-                            scores += SearchMoves(deep + 1, i, j, board_copy)
-                    else:
-                        if(isRowClosure(i, j, 'B', 'W', board_copy, 't') == True):
-                            scores += SearchMoves(deep + 1, i, j, board_copy)         
-        return scores
-    scores = getScores(board_copy)
-    if(isGameOver(board_copy)):
-        return 1000 * (scores['White']- scores['Black'])
-    return scores['White']- scores['Black']
-
 def getScores(tmp):
     countB = 0
     countW = 0
@@ -633,21 +610,53 @@ def getScores(tmp):
                 countW+=1
     return {'White': countW, 'Black': countB}
 
-def MoveAI():
-    bestScore = -10000
-    dict = {}
-    newBoard = deepcopy(board)
+# Рекурсия для поиска максимальной оценки хода
+def Recursion(_board, deep, x, y):
+    step = counterAI() + 1
+    if(step % 2 == 0):
+        _board[x-1][y-1] = 'W'
+    else:
+        _board[x-1][y-1] = 'B'
+    if(deep and isGameOver(_board) == False):
+        score = 0
+        for i in range(1, 9):
+            for j in range(1, 9):
+                if (isOverlay(i, j, _board) == False):
+                    _copy = deepcopy(_board)
+                    if((step + 1) % 2 == 0):
+                        if(isRowClosure(i, j, 'B', 'W', _copy, 'f')):
+                            score += Recursion(_copy, deep - 1, i, j)
+                    else:
+                        if(isRowClosure(i, j, 'W', 'B', _copy, 'f')):
+                            score += Recursion(_copy, deep - 1, i, j)
+        return score
+    scores = getScores(_board)
+    if(isGameOver(_board)):
+        return 1000 * (scores['White'] - scores['Black'])
+    return scores['White'] - scores['Black']    
+# Max
+def Max():
+    best = -10000
+    x, y = 0, 0
+    _x, _y = 0, 0
     for i in range(1, 9):
         for j in range(1, 9):
             if (isOverlay(i, j, board) == False):
-                if(isRowClosure(i, j, 'B', 'W', newBoard, 't') == True):
-                    newScore = SearchMoves(0, i, j, newBoard) 
-                    if (newScore > bestScore):
-                        bestScore = newScore
-                        dict = {'x': i, 'y': j}
-                        print('x: ', dict['x'], 'y: ', dict['y'])
-    FillBoard_White(dict['x'], dict['y'])
-
+                _copy = deepcopy(board)
+                if(isRowClosure(i, j, 'B', 'W', _copy, 'f') == True):
+                    score = Recursion(_copy, 3, i, j)
+                    _x = i
+                    _y = j
+                    if(score > best):
+                        best = score
+                        x = i
+                        y = j
+    print()
+    if(x == 0 or y == 0):
+        x = _x
+        y = _y
+    if(x != 0 and y != 0):
+        if(isRowClosure(x, y, 'B', 'W', board, 'f') == True): FillBoard_White(x, y)
 # Основная функция партии
 def GamePlay():
     f_exit = False
@@ -656,10 +665,10 @@ def GamePlay():
     answer = input()
     if(answer.lower() == 'да'):
         f_AI = True
-    print(answer, f_AI)
     if (f_AI):
         while (f_exit == False):
             PrintBoard(board)
+            print()
             history = WithAI()
             if (history == False):
                 f_exit = True
